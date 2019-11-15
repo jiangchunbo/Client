@@ -9,14 +9,23 @@ const Http = require('http');
 /* 服务器 hostname */
 const hostname = '127.0.0.1';
 /* 服务器 port */
-const port = 9999;
+const port = 80;
 
 
 /* Url.parse 之后有属性形如 path = '/user', pathname = '/user?id=1' */
 Http.createServer((request, response) => {
-    let responseBody = [];
-    /* 请求体 */
     let requestBody = [];
+    let responseBody = [];
+    request.on('data', function (chunk) {
+        requestBody.push(chunk);
+    }).on('end', function () {
+        requestBody = Buffer.concat(requestBody);
+        // request0.write(requestBody);
+        // request0.write('requestBody');
+        // request0.end();
+
+    });
+
     let parsedUrl = Url.parse(request.url, true);
     let options = {
         hostname: hostname,
@@ -31,8 +40,8 @@ Http.createServer((request, response) => {
 
 
 
-    let request0 = Http.request(options, (_response) => {
-        _response.on('data', (chunk) => {
+    let clientRequest = Http.request(options, (res) => {
+        res.on('data', (chunk) => {
             responseBody.push(chunk);
         }).on('end', () => {
             response.writeHead(200, {
@@ -40,7 +49,6 @@ Http.createServer((request, response) => {
                 "Access-Control-Allow-Methods": "*",
                 "Access-Control-Allow-Headers": "Content-Type,XFILENAME,XFILECATEGORY,XFILESIZE,X-URL-PATH,x-access-token"
             });
-            console.log('接收到' + responseBody);
             responseBody = Buffer.concat(responseBody);
             response.end(responseBody);
         });
@@ -53,22 +61,15 @@ Http.createServer((request, response) => {
 
 
 
-    /* 当有 chunk 时, 追加 chunk;  */
-    request.on('data', function (chunk) {
-        requestBody.push(chunk);
 
-    }).on('end', function () {
-        requestBody = Buffer.concat(requestBody);
-        request0.write(requestBody);
-        request0.end();
 
-    });
-
+    clientRequest.write('requestBody');
+    clientRequest.end();
 
 }).listen(8888, hostname);
 
-console.log('监听 127.0.0.1:8888 服务已启动');
 
+console.log('监听 127.0.0.1:8888 服务已启动');
 
 // /**
 //  * 该脚本一旦确定完毕后期就不必再修改

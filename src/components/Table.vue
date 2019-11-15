@@ -1,10 +1,12 @@
 <template>
     <el-container style="height: 800px; border: 1px solid #eee">
         <el-header>
-            <el-checkbox-group v-model="checkList">
-                <el-checkbox v-for="(value, key, index) in propertyMapper" :key="index" :label="key">{{value}}</el-checkbox>
+            <el-checkbox-group v-model="checkList" style="display: inline-block">
+                <el-checkbox v-for="(property, index) in properties" :key="index" :label="property['id']">
+                    {{property['name']}}
+                </el-checkbox>
             </el-checkbox-group>
-            <el-button type="primary" :loading="false" @click="refresh">刷新</el-button>
+            <el-button type="primary" :loading="false" @click="refresh(currentPage, pageSize)">刷新</el-button>
         </el-header>
         <el-main>
             <!-- stripe 有条纹 -->
@@ -20,10 +22,10 @@
                 <!-- label 显示出来的列名 -->
 
                 <el-table-column
-                        v-for="(value, key,index) in propertyMapper"
+                        v-for="(property, index) in checkedProperties"
                         :key="index"
-                        :property="key"
-                        :label="value">
+                        :property="property['id']"
+                        :label="property['name']">
                 </el-table-column>
                 <el-table-column
                         fixed="right"
@@ -63,18 +65,12 @@
 
 
     export default {
-
-        name: "Table",
         components: {
 
         },
         data: () => {
             return {
-                propertyMapper: {
-                    'id': '标识符',
-                    'name': '姓名',
-                    'sex': '性别'
-                },
+                properties: [],
                 tableData: [
                     {
                         'id': '161303101',
@@ -90,31 +86,43 @@
                 currentPage: 1,
                 pageSize: 10,
                 total: 0,
-                checkList: [
-                    'A', 'B', 'C'
-                ]
+                checkList: []
+            }
+        },
+        computed: {
+            checkedProperties: function() {
+                return this.properties.filter(function(property) {
+                    return property['checked'];
+                });
             }
         },
         methods: {
 
-            getPropertyMapper() {
-
-            },
-
-            refresh (currentPage = 1, pageSize = this.pageSize) {
-                window.console.log(this.checkList);
+            refresh: function (currentPage = 1, pageSize = this.pageSize) {
                 let this0 = this;
                 Ajax.post('/users', {
                     pageNum: currentPage,
-                    pageSize: pageSize
+                    pageSize: pageSize,
+                    checkList: this.checkList
                 }).then(function(response) {
-                    window.console.log('response', response);
                     let jsonString = response.request.response;
-                    window.console.log('jsonString', jsonString);
+
+                    window.console.log(jsonString);
                     let jsonObj = JSON.parse(jsonString);
+
+
                     this0.tableData = jsonObj.tableData;
-                    this0.propertyMapper = jsonObj.propertyMapper;
-                    window.console.log(this0.propertyMapper);
+                    this0.total = jsonObj.total;
+                    this0.properties = jsonObj.properties;
+
+                    window.console.log(jsonObj.properties);
+                    /* 将 checkableProperty 中 checked 的属性置入 checkList */
+                    this0.checkList.length = 0;
+                    for(let i = 0; i < jsonObj.properties.length; i++) {
+                        if(jsonObj.properties[i].checked === true) {
+                            this0.checkList.push(jsonObj.properties[i]['id']);
+                        }
+                    }
                 }).catch(function (error) {
                     window.console.log('error', error);
                 });
@@ -127,6 +135,10 @@
             sizeChangeHandler(pageSize) {
                 this.refresh(1, pageSize);
             },
+
+            getTotal() {
+
+            }
         },
         mounted: function()  {
             this.total = this.tableData.length;

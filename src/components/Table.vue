@@ -71,18 +71,7 @@
         data: () => {
             return {
                 properties: [],
-                tableData: [
-                    {
-                        'id': '161303101',
-                        'name': '蔡某',
-                        'sex': '男'
-                    },
-                    {
-                        'id': '161303103',
-                        'name': '范某',
-                        'sex': '女'
-                    }
-                ],
+                tableData: [],
                 currentPage: 1,
                 pageSize: 10,
                 total: 0,

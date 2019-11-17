@@ -1,9 +1,30 @@
 <template>
-    <el-menu class="el-menu-demo" mode="vertical" background-color="#f0ecf9" text-color="#b3afbb"
-             active-text-color="#666">
-        <el-menu-item index="1">菜单1</el-menu-item>
-        <el-menu-item index="2">菜单2</el-menu-item>
-        <el-menu-item index="3">菜单3</el-menu-item>
+    <el-menu
+            class="el-menu-demo"
+            mode="vertical"
+            router
+            default-active="/master/table">
+
+        <el-menu-item index="/master/table">
+            <template slot="title">
+                <i class="el-icon-s-data"></i>
+                <span>数据操作</span>
+            </template>
+        </el-menu-item>
+
+        <el-menu-item index="/master/analysis">
+            <template slot="title">
+                <i class="el-icon-coin"></i>
+                <span>数据分析</span>
+            </template>
+        </el-menu-item>
+
+        <el-menu-item index="/master/import">
+            <template slot="title">
+                <i class="el-icon-document-add"></i>
+                <span>数据导入</span>
+            </template>
+        </el-menu-item>
     </el-menu>
 
 </template>
@@ -22,7 +43,10 @@
 </script>
 
 <style scoped>
-    .el-menu-item:hover {
-        background-color: #d4d0e0 !important
+
+    li {
+        padding: 0 !important;
     }
+
+
 </style>

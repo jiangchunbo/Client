@@ -7,11 +7,21 @@ import Import from "../components/Import";
 import Analysis from "../components/Analysis";
 import MasterTagTable from "../components/TablePanel";
 import TablePanel from "@/components/TablePanel";
+import Home from "../views/Home";
+import About from "../views/About";
 
 Vue.use(VueRouter);
 
 export default new VueRouter({
     routes: [
+        {
+            path: '/home',
+            component: Home
+        },
+        {
+            path: '/about',
+            component: About
+        },
         {
             path: '/',
             component: Container,

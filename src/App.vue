@@ -1,10 +1,19 @@
 <template>
     <div id="app">
-        <router-view></router-view>
+        <el-container style="height: 100%;">
+            <el-header class="header" height="80px">
+                <NavigationBar></NavigationBar>
+            </el-header>
+
+            <el-main style="padding: 20px 0">
+                <router-view></router-view>
+            </el-main>
+        </el-container>
     </div>
 </template>
 
 <script>
+    import NavigationBar from "./components/NavigationBar";
 
     export default {
         name: 'app',
@@ -12,6 +21,7 @@
             return {};
         },
         components: {
+            NavigationBar
         }
     }
 </script>
@@ -23,5 +33,13 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         margin: 0;
+        height: 100%;
+    }
+
+
+    .header {
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 0 10px 5px;
     }
 </style>

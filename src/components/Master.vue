@@ -4,18 +4,19 @@
             <Menu></Menu>
         </el-aside>
         <el-main>
-            <router-view></router-view>
+            <Tab></Tab>
         </el-main>
     </el-container>
 </template>
 
 <script>
     import Menu from "./Menu";
+    import Tab from "./Main";
 
     export default {
         name: "Master",
         components: {
-            Menu
+            Menu, Tab
         }
     }
 </script>

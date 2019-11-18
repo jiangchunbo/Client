@@ -1,24 +1,37 @@
 <template>
     <div class="container">
-        <el-image :src="logo" fit="fit"></el-image>
-        <ul>
-            <li @click="clickHandler">
-                <router-link to="/master/weather">总库</router-link>
-            </li>
-            <li @click="clickHandler">
-                <router-link to="/slave1/weather">分库1</router-link>
-            </li>
-            <li @click="clickHandler">
-                <router-link to="/slave2/weather">分库2</router-link>
-            </li>
-            <li @click="clickHandler">
-                <router-link to="/slave3/weather">分库3</router-link>
-            </li>
-            <li @click="clickHandler">
-                <router-link to="/slave4/weather">分库4</router-link>
-            </li>
-        </ul>
+        <el-image class="logo" :src="logo" fit="fit"></el-image>
+        <el-menu default-active="/home" class="el-menu-demo menu" mode="horizontal" @select="handleSelect" router>
+
+            <el-menu-item index="/home" tabindex="1">
+                <a>主页</a>
+            </el-menu-item>
+
+            <el-menu-item index="/about" tabindex="2">
+                <a>关于</a>
+            </el-menu-item>
+        </el-menu>
     </div>
+<!--    <div class="container">-->
+<!--        <el-image :src="logo" fit="fit"></el-image>-->
+<!--        <ul>-->
+<!--            <li @click="clickHandler">-->
+<!--                <router-link to="/master/weather">总库</router-link>-->
+<!--            </li>-->
+<!--            <li @click="clickHandler">-->
+<!--                <router-link to="/slave1/weather">分库1</router-link>-->
+<!--            </li>-->
+<!--            <li @click="clickHandler">-->
+<!--                <router-link to="/slave2/weather">分库2</router-link>-->
+<!--            </li>-->
+<!--            <li @click="clickHandler">-->
+<!--                <router-link to="/slave3/weather">分库3</router-link>-->
+<!--            </li>-->
+<!--            <li @click="clickHandler">-->
+<!--                <router-link to="/slave4/weather">分库4</router-link>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
 </template>
 
 <script>
@@ -27,7 +40,8 @@
     export default {
         data: function () {
             return {
-                logo
+                logo,
+                activeIndex: '/home'
             }
         },
         methods: {
@@ -40,77 +54,69 @@
 </script>
 
 <style scoped>
+
     .container {
-        height: 100%;
         display: flex;
+        justify-content: right;
+        align-items: center;
     }
-    .el-image {
+
+    .logo {
         width: 50px;
         height: 50px;
-        margin: auto 20px;
-    }
-    ul {
-        margin: auto 50px;
-        display: flex;
     }
 
-    ul li {
-        list-style: none;
+    .menu {
+        margin-left: 50px;
     }
+    /*ul {*/
+    /*    color: #000 !important;*/
+    /*    border: none !important;*/
+    /*}*/
 
-    ul li a {
-        position: relative;
-        display: block;
-        padding: 5px 30px;
-        margin: 5px 0;
-        text-decoration: none;
-        color: #262626;
-        font-weight: bold;
-        transition: .5s;
-    }
+    /*ul li a {*/
+    /*    font-weight: bold !important;*/
+    /*    transition: .5s !important;*/
+    /*}*/
 
-    ul li a:hover,
-    .active a{
-        color: #fff;
-    }
+    /*ul>li:hover,*/
+    /*ul>li.is-active {*/
+    /*    color: #fff !important;*/
+    /*}*/
 
-    ul li a:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-top: 1px solid #000;
-        border-bottom: 1px solid #000;
-        transform: scaleY(2);
-        opacity: 0;
-        transition: .5s;
-    }
+    /*ul li:before {*/
+    /*    content: '';*/
+    /*    position: absolute;*/
+    /*    top: 0;*/
+    /*    left: 0;*/
+    /*    width: 100%;*/
+    /*    height: 100%;*/
+    /*    border-top: 1px solid #000;*/
+    /*    border-bottom: 1px solid #000;*/
+    /*    transform: scaleY(1);*/
+    /*    opacity: 0;*/
+    /*    transition: .5s;*/
+    /*}*/
 
-    ul li a:hover:before,
-    .active a:before{
-        transform: scaleY(1);
-        opacity: 1;
-    }
+    /*ul li:hover::before{*/
+    /*    transform: scaleY(0.5);*/
+    /*    opacity: 1;*/
+    /*    transition: .5s;*/
+    /*}*/
 
-    ul li a:after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #000000;
-        transform: scaleY(0);
-        opacity: 0;
-        transition: .5s;
-        z-index: -1;
-    }
+    /*ul li:after {*/
+    /*    content: '';*/
+    /*    position: absolute;*/
+    /*    top: 0;*/
+    /*    left: 0;*/
+    /*    width: 100%;*/
+    /*    height: 100%;*/
+    /*    background-color: #000000;*/
+    /*    transform: scaleY(0);*/
+    /*    transition: .5s;*/
+    /*}*/
 
-    ul li a:hover:after,
-    .active a:after{
-        transform: scaleY(1);
-        opacity: 1;
-    }
+    /*ul li:hover::after{*/
+    /*    transform: scaleY(0.5);*/
+    /*}*/
 </style>

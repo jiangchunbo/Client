@@ -11,7 +11,7 @@
 
                 <el-button style="margin-left: 20px;" :loading="loading" type="primary" icon="el-icon-refresh" circle @click="refresh(currentPage, pageSize)"></el-button>
 
-                <el-select style="width: 100px;" v-model="value" placeholder="请选择关键字">
+                <el-select style="width: 150px; margin-left: 20px;" v-model="value" placeholder="请选择关键字">
                     <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -167,7 +167,7 @@
     }
 
     .search-box {
-        margin: 0 0 0 50px;
+        margin: 0 0 0 10px;
         padding: 0;
         position: absolute;
         display: inline-block;

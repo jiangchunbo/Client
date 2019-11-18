@@ -3,9 +3,9 @@
             class="el-menu-demo"
             mode="vertical"
             router
-            default-active="/master/table">
+            default-active="/master/weather">
 
-        <el-menu-item index="/master/table">
+        <el-menu-item index="/master/weather">
             <template slot="title">
                 <i class="el-icon-s-data"></i>
                 <span>数据操作</span>

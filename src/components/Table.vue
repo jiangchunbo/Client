@@ -1,12 +1,33 @@
 <template>
     <el-container style="height: 800px; border: 1px solid #eee">
         <el-header>
-            <el-checkbox-group v-model="checkList" style="display: inline-block">
-                <el-checkbox v-for="(property, index) in properties" :key="index" :label="property['id']">
-                    {{property['name']}}
-                </el-checkbox>
-            </el-checkbox-group>
-            <el-button type="primary" :loading="false" @click="refresh(currentPage, pageSize)">刷新</el-button>
+            <div style="margin-top: 10px;">
+                <el-checkbox-group v-model="checkList" style="display: inline-block">
+                    <el-checkbox v-for="(value, key, index) in master.weatherProps[0]" :key="index" :label="key">
+                        {{value.alias}}
+                    </el-checkbox>
+                </el-checkbox-group>
+
+
+                <el-button style="margin-left: 20px;" :loading="loading" type="primary" icon="el-icon-refresh" circle @click="refresh(currentPage, pageSize)"></el-button>
+
+                <el-select style="width: 100px;" v-model="value" placeholder="请选择关键字">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+
+                <div class="search-box">
+
+                    <input class="search-text" type="text" name="" placeholder="在此输入关键字"/>
+                    <a class="search-btn" href="#">
+                        <i class="el-icon-search"></i>
+                    </a>
+                </div>
+            </div>
         </el-header>
         <el-main>
             <!-- stripe 有条纹 -->
@@ -17,20 +38,21 @@
                     border
                     stripe
                     style="width: 100%"
-                    highlight-current-row>
+                    highlight-current-row
+                    empty-text="暂时无法获取到数据">
                 <!-- prop 为 js 对象中的键名 -->
                 <!-- label 显示出来的列名 -->
 
                 <el-table-column
-                        v-for="(property, index) in checkedProperties"
+                        v-for="(value, index) in checkList"
                         :key="index"
-                        :property="property['id']"
-                        :label="property['name']">
+                        :property="value"
+                        :label="master.weatherProps[0][`${value}`].alias">
                 </el-table-column>
                 <el-table-column
                         fixed="right"
                         label="操作">
-                        <el-button type="text" size="small">查看</el-button>
+                    <el-button type="text" size="small">查看</el-button>
                 </el-table-column>
             </el-table>
         </el-main>
@@ -61,60 +83,60 @@
 </template>
 
 <script>
-    import Ajax from "@/util/ajax";
+    import ajax from "@/util/ajax";
 
 
     export default {
-        components: {
-
-        },
+        components: {},
         data: () => {
             return {
-                properties: [],
                 tableData: [],
                 currentPage: 1,
                 pageSize: 10,
                 total: 0,
-                checkList: []
+                checkList: [],
+                loading: false,
+                options: [{
+                    value: '选项1',
+                    label: '黄金糕'
+                }, {
+                    value: '选项2',
+                    label: '双皮奶'
+                }, {
+                    value: '选项3',
+                    label: '蚵仔煎'
+                }, {
+                    value: '选项4',
+                    label: '龙须面'
+                }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                }],
+                value: ''
             }
         },
-        computed: {
-            checkedProperties: function() {
-                return this.properties.filter(function(property) {
-                    return property['checked'];
-                });
-            }
+        props: {
+            tableName: String
         },
         methods: {
 
-            refresh: function (currentPage = 1, pageSize = this.pageSize) {
-                let this0 = this;
-                Ajax.post('/users', {
+            refresh(currentPage = 1, pageSize = this.pageSize) {
+                this.loading = true;
+                ajax.post(`/master/weather`, {
                     pageNum: currentPage,
                     pageSize: pageSize,
                     checkList: this.checkList
-                }).then(function(response) {
-                    let jsonString = response.request.response;
-
-                    window.console.log(jsonString);
-                    let jsonObj = JSON.parse(jsonString);
-
-
-                    this0.tableData = jsonObj.tableData;
-                    this0.total = jsonObj.total;
-                    this0.properties = jsonObj.properties;
-
-                    window.console.log(jsonObj.properties);
-                    /* 将 checkableProperty 中 checked 的属性置入 checkList */
-                    this0.checkList.length = 0;
-                    for(let i = 0; i < jsonObj.properties.length; i++) {
-                        if(jsonObj.properties[i].checked === true) {
-                            this0.checkList.push(jsonObj.properties[i]['id']);
-                        }
-                    }
-                }).catch(function (error) {
+                }).then((data) =>{
+                    let jsonObj = JSON.parse(data.request.response);
+                    this.tableData = jsonObj.tableData;
+                    this.total = jsonObj.total;
+                }).catch((error) => {
                     window.console.log('error', error);
+                }).finally(() => {
+                    this.loading = false;
                 });
+
+
             },
 
             currentChangeHandler(currentPage) {
@@ -123,14 +145,14 @@
 
             sizeChangeHandler(pageSize) {
                 this.refresh(1, pageSize);
-            },
-
-            getTotal() {
-
             }
         },
-        mounted: function()  {
-            this.total = this.tableData.length;
+
+        mounted() {
+            this.checkList.length = 0;
+            window.console.log(this.master.tables);
+            Object.keys(this.master.weatherProps[0]).forEach((key) => {this.checkList.push(key);});
+            this.refresh();
         }
 
     }
@@ -142,5 +164,47 @@
         color: #333;
         line-height: 60px;
         padding: auto;
+    }
+
+    .search-box {
+        margin: 0 0 0 50px;
+        padding: 0;
+        position: absolute;
+        display: inline-block;
+        height: 40px;
+        background-color: #409efe;
+        border-radius: 40px;
+    }
+
+    .search-text {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: none;
+        outline: none;
+        float: left;
+        color: white;
+        font-size: 16px;
+        transition: 0.4s;
+        line-height: 40px;
+        width: 0;
+    }
+
+    .search-box:hover>.search-text {
+        width: 150px;
+        padding: 0 10px;
+    }
+
+    .search-btn {
+        float: right;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: white;
     }
 </style>

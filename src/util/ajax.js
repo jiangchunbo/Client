@@ -3,7 +3,7 @@ import Axios from 'axios'
 import querystring from 'querystring'
 
 /* 为了规范等，这里末尾不加 / */
-let base = 'http://127.0.0.1:8888';
+let base = 'http://127.0.0.1';
 // let base = '';
 
 export default {

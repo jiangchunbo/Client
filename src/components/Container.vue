@@ -1,6 +1,6 @@
 <template>
     <el-container id="container">
-        <el-header>
+        <el-header height="80px">
             <NavigationBar></NavigationBar>
         </el-header>
 
@@ -12,21 +12,13 @@
 
 <script>
     import NavigationBar from "./NavigationBar";
-    import logo from '../assets/logo.png'
 
     export default {
         components: {
             NavigationBar
         },
         data: function() {
-            return {
-                logo,
-                activeName: 'first'
-            }
-        },
-        mounted() {
-            window.console.log(document.documentElement.clientHeight);
-            document.getElementById('container').style.height = document.documentElement.clientHeight + 'px';
+            return {};
         }
 
     }

@@ -2,20 +2,20 @@
     <div class="container">
         <el-image :src="logo" fit="fit"></el-image>
         <ul>
-            <li>
-                <router-link to="/master">总库</router-link>
+            <li @click="clickHandler">
+                <router-link to="/master/weather">总库</router-link>
             </li>
-            <li>
-                <router-link to="/slave1">分库1</router-link>
+            <li @click="clickHandler">
+                <router-link to="/slave1/weather">分库1</router-link>
             </li>
-            <li>
-                <router-link to="/slave2">分库2</router-link>
+            <li @click="clickHandler">
+                <router-link to="/slave2/weather">分库2</router-link>
             </li>
-            <li>
-                <router-link to="/slave3">分库3</router-link>
+            <li @click="clickHandler">
+                <router-link to="/slave3/weather">分库3</router-link>
             </li>
-            <li>
-                <router-link to="/slave4">分库4</router-link>
+            <li @click="clickHandler">
+                <router-link to="/slave4/weather">分库4</router-link>
             </li>
         </ul>
     </div>
@@ -28,6 +28,12 @@
         data: function () {
             return {
                 logo
+            }
+        },
+        methods: {
+            clickHandler(e) {
+                window.console.log(document.getElementsByClassName('active'));
+                e.currentTarget.classList.add('active');
             }
         }
     }
@@ -63,7 +69,8 @@
         transition: .5s;
     }
 
-    ul li a:hover {
+    ul li a:hover,
+    .active a{
         color: #fff;
     }
 
@@ -81,7 +88,8 @@
         transition: .5s;
     }
 
-    ul li a:hover:before {
+    ul li a:hover:before,
+    .active a:before{
         transform: scaleY(1);
         opacity: 1;
     }
@@ -100,7 +108,8 @@
         z-index: -1;
     }
 
-    ul li a:hover:after {
+    ul li a:hover:after,
+    .active a:after{
         transform: scaleY(1);
         opacity: 1;
     }

@@ -1,9 +1,9 @@
 <template>
-    <el-container>
-        <el-aside width="150px">
+    <el-container id="container">
+        <el-aside width="150px" id="aside">
             <Menu></Menu>
         </el-aside>
-        <el-main style="background-color: pink;">
+        <el-main>
             <router-view></router-view>
         </el-main>
     </el-container>
@@ -21,7 +21,11 @@
 </script>
 
 <style scoped>
-    .el-container {
-        height: 100%;
+    .el-aside {
+        border-right: 1px solid #DDDDDD;
+    }
+
+    ul {
+        border-right: 0;
     }
 </style>

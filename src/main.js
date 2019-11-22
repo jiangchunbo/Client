@@ -10,16 +10,32 @@ Vue.config.productionTip = false;
 
 
 Vue.prototype.master = {
-    tables: [
-        '天气'
-    ],
-    weatherProps: [{
-        id: {alias: '标识符'},
-        temperature: {alias: '温度'},
-        humidity: {alias: '湿度'},
-        pressure: {alias: '气压'},
-        creation_time: {alias: '日期'}
-    }]
+    weather: {
+        properties: {
+            id: {alias: '标识符'},
+            temperature: {alias: '温度'},
+            humidity: {alias: '湿度'},
+            pressure: {alias: '气压'},
+            gmt_create: {alias: '创建日期'},
+            gmt_modified: {alias: '修改日期'}
+        },
+        checkList: [
+            'id', 'temperature', 'humidity', 'pressure', 'gmt_create', 'gmt_modified'
+        ]
+    },
+    ocean: {
+        properties: {
+            id: {alias: '标识符'},
+            temperature: {alias: '温度'},
+            salinity: {alias: '盐度'},
+            density: {alias: '密度'},
+            gmt_create: {alias: '创建日期'},
+            gmt_modified: {alias: '修改日期'}
+        },
+        checkList: [
+            'id', 'temperature', 'salinity', 'density', 'gmt_create', 'gmt_modified'
+        ]
+    }
 };
 
 new Vue({

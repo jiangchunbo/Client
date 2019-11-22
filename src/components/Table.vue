@@ -2,8 +2,8 @@
     <el-container style="height: 800px; border: 1px solid #eee">
         <el-header>
             <div style="margin-top: 10px;">
-                <el-checkbox-group v-model="checkList" style="display: inline-block">
-                    <el-checkbox v-for="(value, key, index) in master.weatherProps[0]" :key="index" :label="key">
+                <el-checkbox-group v-model="checkList[tableName]" style="display: inline-block">
+                    <el-checkbox v-for="(value, key, index) in this.master[`${this.tableName}`]['properties']" :key="index" :label="key">
                         {{value.alias}}
                     </el-checkbox>
                 </el-checkbox-group>
@@ -44,15 +44,26 @@
                 <!-- label 显示出来的列名 -->
 
                 <el-table-column
-                        v-for="(value, index) in checkList"
+                        v-for="(value, index) in checkList[tableName]"
                         :key="index"
                         :property="value"
-                        :label="master.weatherProps[0][`${value}`].alias">
+                        :label="label(value)">
                 </el-table-column>
+
+                <el-table-column property="order2" label="装车点">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.order2" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+
                 <el-table-column
                         fixed="right"
-                        label="操作">
-                    <el-button type="text" size="small">查看</el-button>
+                        label="操作"
+                        width="100">
+                    <template slot-scope="scope">
+                        <el-button @click="viewHandler(scope)" type="text" size="small">查看</el-button>
+                        <el-button type="text" size="small">编辑</el-button>
+                    </template>
                 </el-table-column>
             </el-table>
         </el-main>
@@ -94,7 +105,10 @@
                 currentPage: 1,
                 pageSize: 10,
                 total: 0,
-                checkList: [],
+                checkList: {
+                    weather: [],
+                    ocean: []
+                },
                 loading: false,
                 options: [{
                     value: '选项1',
@@ -118,15 +132,28 @@
         props: {
             tableName: String
         },
+        watch: {
+            tableName() {
+                this.refresh();
+            }
+        },
         methods: {
 
-            refresh(currentPage = 1, pageSize = this.pageSize) {
+            viewHandler(scope) {
+                window.console.log(scope);
+            },
+
+            label(value) {
+                return this.master[`${this.tableName}`]['properties'][value].alias;
+            },
+
+            refresh() {
                 this.loading = true;
-                ajax.post(`/master/weather`, {
-                    pageNum: currentPage,
-                    pageSize: pageSize,
-                    checkList: this.checkList
-                }).then((data) =>{
+                ajax.post(`/master/${this.tableName}`, {
+                    pageNum: this.currentPage,
+                    pageSize: this.pageSize,
+                    checkList: this.checkList[`${this.tableName}`]
+                }).then((data) => {
                     let jsonObj = JSON.parse(data.request.response);
                     this.tableData = jsonObj.tableData;
                     this.total = jsonObj.total;
@@ -140,18 +167,21 @@
             },
 
             currentChangeHandler(currentPage) {
+                this.currentPage = currentPage;
                 this.refresh(currentPage);
             },
 
             sizeChangeHandler(pageSize) {
-                this.refresh(1, pageSize);
+                this.pageSize = pageSize;
+                this.refresh();
             }
         },
 
         mounted() {
             this.checkList.length = 0;
-            window.console.log(this.master.tables);
-            Object.keys(this.master.weatherProps[0]).forEach((key) => {this.checkList.push(key);});
+            Object.keys(this.master.weather.properties).forEach((key) => {this.checkList['weather'].push(key);});
+            window.console.log(this.checkList['weather']);
+            Object.keys(this.master['ocean']['properties']).forEach((key) => {this.checkList['ocean'].push(key);});
             this.refresh();
         }
 

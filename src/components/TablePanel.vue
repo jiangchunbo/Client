@@ -1,6 +1,6 @@
 <template>
     <el-tabs v-model="index">
-        <el-tab-pane v-for="(value, index) in master.tables" :key="index" :label="value" :name="value">
+        <el-tab-pane v-for="(value, index) in this.master.weatherProps" :key="index" :label="value" :name="value">
             <Table :tableName="value"></Table>
         </el-tab-pane>
     </el-tabs>

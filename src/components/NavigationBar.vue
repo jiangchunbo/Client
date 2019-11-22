@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <el-image class="logo" :src="logo" fit="fit"></el-image>
-        <el-menu default-active="/home" class="el-menu-demo menu" mode="horizontal" @select="handleSelect" router>
+        <el-menu default-active="/home" class="el-menu-demo menu" mode="horizontal" router>
 
             <el-menu-item index="/home" tabindex="1">
                 <a>主页</a>
@@ -12,26 +12,6 @@
             </el-menu-item>
         </el-menu>
     </div>
-<!--    <div class="container">-->
-<!--        <el-image :src="logo" fit="fit"></el-image>-->
-<!--        <ul>-->
-<!--            <li @click="clickHandler">-->
-<!--                <router-link to="/master/weather">总库</router-link>-->
-<!--            </li>-->
-<!--            <li @click="clickHandler">-->
-<!--                <router-link to="/slave1/weather">分库1</router-link>-->
-<!--            </li>-->
-<!--            <li @click="clickHandler">-->
-<!--                <router-link to="/slave2/weather">分库2</router-link>-->
-<!--            </li>-->
-<!--            <li @click="clickHandler">-->
-<!--                <router-link to="/slave3/weather">分库3</router-link>-->
-<!--            </li>-->
-<!--            <li @click="clickHandler">-->
-<!--                <router-link to="/slave4/weather">分库4</router-link>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
 </template>
 
 <script>
@@ -45,10 +25,6 @@
             }
         },
         methods: {
-            clickHandler(e) {
-                window.console.log(document.getElementsByClassName('active'));
-                e.currentTarget.classList.add('active');
-            }
         }
     }
 </script>

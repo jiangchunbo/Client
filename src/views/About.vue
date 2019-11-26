@@ -1,12 +1,14 @@
 <template>
-    <div>
-        关于页面
-    </div>
+    <multiple-x-axes style="height: 100%; margin: 0"></multiple-x-axes>
 </template>
 
 <script>
+    import MultipleXAxes from "@/components/MultipleXAxes";
     export default {
-        name: "About"
+        name: "About",
+        components: {
+            MultipleXAxes
+        }
     }
 </script>
 

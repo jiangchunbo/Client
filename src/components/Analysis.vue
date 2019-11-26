@@ -1,12 +1,19 @@
 <template>
-    <div>
-        数据分析标签页
-    </div>
+    <el-row>
+        <el-col :span="24">
+            <multiple-x-axes></multiple-x-axes>
+        </el-col>
+    </el-row>
 </template>
 
 <script>
+    import MultipleXAxes from "@/components/MultipleXAxes";
+
     export default {
-        name: "Analysis"
+        name: "Analysis",
+        components: {
+            MultipleXAxes
+        }
     }
 </script>
 

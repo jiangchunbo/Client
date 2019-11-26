@@ -2,12 +2,14 @@
     <el-container style="height: 800px; border: 1px solid #eee">
         <el-header>
             <div style="margin-top: 10px;">
-                <el-checkbox-group v-model="checkList[tableName]" style="display: inline-block">
-                    <el-checkbox v-for="(value, key, index) in this.master[`${this.tableName}`]['properties']" :key="index" :label="key">
+                <el-checkbox-group
+                        v-model="checkList[tableName]"
+                        style="display: inline-block"
+                        :min="1">
+                    <el-checkbox v-for="(value, key, index) in this.general[`${this.tableName}`]['properties']" :key="index" :label="key">
                         {{value.alias}}
                     </el-checkbox>
                 </el-checkbox-group>
-
 
                 <el-button style="margin-left: 20px;" :loading="loading" type="primary" icon="el-icon-refresh" circle @click="refresh(currentPage, pageSize)"></el-button>
 
@@ -39,21 +41,18 @@
                     stripe
                     style="width: 100%"
                     highlight-current-row
-                    empty-text="暂时无法获取到数据">
+                    v-loading="loading"
+                    element-loading-text="拼命加载中"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.6)">
                 <!-- prop 为 js 对象中的键名 -->
                 <!-- label 显示出来的列名 -->
 
                 <el-table-column
-                        v-for="(value, index) in checkList[tableName]"
+                        v-for="(value, index) in sortedList"
                         :key="index"
                         :property="value"
                         :label="label(value)">
-                </el-table-column>
-
-                <el-table-column property="order2" label="装车点">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.order2" placeholder="请输入内容"></el-input>
-                    </template>
                 </el-table-column>
 
                 <el-table-column
@@ -130,11 +129,32 @@
             }
         },
         props: {
+            dataBaseName: String,
             tableName: String
         },
         watch: {
+            checkList: {
+                handler: function() {
+                    this.refresh();
+                },
+                deep: true
+            },
+            dataBaseName() {
+                this.refresh();
+            },
             tableName() {
                 this.refresh();
+            }
+        },
+        computed: {
+            sortedList() {
+                let result = [];
+                for(let key in this.general.weather.properties) {
+                    if(this.checkList[this.tableName].indexOf(key) !== -1) {
+                        result.push(key);
+                    }
+                }
+                return result;
             }
         },
         methods: {
@@ -144,21 +164,21 @@
             },
 
             label(value) {
-                return this.master[`${this.tableName}`]['properties'][value].alias;
+                return this.general[`${this.tableName}`]['properties'][value].alias;
             },
 
             refresh() {
                 this.loading = true;
-                ajax.post(`/master/${this.tableName}`, {
-                    pageNum: this.currentPage,
-                    pageSize: this.pageSize,
+                this.total = 0;
+                this.tableData = [];
+                ajax.post(`/${this.dataBaseName}/${this.tableName};pageNum=${this.currentPage};pageSize=${this.pageSize}`, {
                     checkList: this.checkList[`${this.tableName}`]
                 }).then((data) => {
                     let jsonObj = JSON.parse(data.request.response);
                     this.tableData = jsonObj.tableData;
                     this.total = jsonObj.total;
                 }).catch((error) => {
-                    window.console.log('error', error);
+                    this.warning('获取数据失败，原因 ' + error);
                 }).finally(() => {
                     this.loading = false;
                 });
@@ -174,14 +194,21 @@
             sizeChangeHandler(pageSize) {
                 this.pageSize = pageSize;
                 this.refresh();
+            },
+
+            warning(message) {
+                this.$message({
+                    message: message,
+                    type: 'warning'
+                });
             }
         },
 
         mounted() {
             this.checkList.length = 0;
-            Object.keys(this.master.weather.properties).forEach((key) => {this.checkList['weather'].push(key);});
+            Object.keys(this.general.weather.properties).forEach((key) => {this.checkList['weather'].push(key);});
             window.console.log(this.checkList['weather']);
-            Object.keys(this.master['ocean']['properties']).forEach((key) => {this.checkList['ocean'].push(key);});
+            Object.keys(this.general['ocean']['properties']).forEach((key) => {this.checkList['ocean'].push(key);});
             this.refresh();
         }
 

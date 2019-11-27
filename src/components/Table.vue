@@ -1,5 +1,5 @@
 <template>
-    <el-container style="height: 800px; border: 1px solid #eee">
+    <el-container style="height: 100%; border: 1px solid #eee">
         <el-header>
             <div style="margin-top: 10px;">
                 <el-checkbox-group
@@ -44,7 +44,7 @@
                     v-loading="loading"
                     element-loading-text="拼命加载中"
                     element-loading-spinner="el-icon-loading"
-                    element-loading-background="rgba(0, 0, 0, 0.6)">
+                    element-loading-background="rgba(f, f, f, 0.1)">
                 <!-- prop 为 js 对象中的键名 -->
                 <!-- label 显示出来的列名 -->
 
@@ -130,21 +130,11 @@
         },
         props: {
             dataBaseName: String,
-            tableName: String
+            tableName: String,
+            refreshBreadcrumb: Function
         },
         watch: {
-            checkList: {
-                handler: function() {
-                    this.refresh();
-                },
-                deep: true
-            },
-            dataBaseName() {
-                this.refresh();
-            },
-            tableName() {
-                this.refresh();
-            }
+
         },
         computed: {
             sortedList() {
@@ -172,18 +162,17 @@
                 this.total = 0;
                 this.tableData = [];
                 ajax.post(`/${this.dataBaseName}/${this.tableName};pageNum=${this.currentPage};pageSize=${this.pageSize}`, {
-                    checkList: this.checkList[`${this.tableName}`]
+                    // 表单数据, 暂无
                 }).then((data) => {
                     let jsonObj = JSON.parse(data.request.response);
                     this.tableData = jsonObj.tableData;
                     this.total = jsonObj.total;
+                    this.refreshBreadcrumb();
                 }).catch((error) => {
                     this.warning('获取数据失败，原因 ' + error);
                 }).finally(() => {
                     this.loading = false;
                 });
-
-
             },
 
             currentChangeHandler(currentPage) {

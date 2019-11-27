@@ -53,7 +53,18 @@
         </el-aside>
 
         <el-container>
-            <el-main>
+            <el-header height="50px" style="position: relative;">
+                <el-tag effect="light"
+                        style="position: absolute; height: 30px; width: 100px; line-height: 30px; top: 10px; left: 20px; right: 0; bottom: 10px;">
+                    当前位置:
+                </el-tag>
+                <el-breadcrumb separator-class="el-icon-arrow-right"
+                               style="position: absolute; height: 50px; line-height: 50px; top: 0; left: 150px; right: 0; bottom: 0;">
+                    <el-breadcrumb-item>{{dataBaseName_zh_CN}}</el-breadcrumb-item>
+                    <el-breadcrumb-item>{{tableName_zh_CN}}</el-breadcrumb-item>
+                </el-breadcrumb>
+            </el-header>
+            <el-main style="padding-top: 0; padding-bottom: 0">
                 <el-tabs v-model="activeTabName">
                     <el-tab-pane label="数据" name="data">
                         <Table ref="table" :dataBaseName="dataBaseName" :tableName="tableName"></Table>
@@ -83,8 +94,36 @@
             return {
                 dataBaseName: 'general',
                 tableName: 'weather',
-                activeTabName: 'data'
+                activeTabName: 'analysis'
             };
+        },
+        computed: {
+            dataBaseName_zh_CN() {
+                switch (this.dataBaseName) {
+                    case 'general':
+                        return '主库';
+                    case 'sub1':
+                        return '分库1';
+                    case 'sub2':
+                        return '分库2';
+                    case 'sub3':
+                        return '分库3';
+                    case 'sub4':
+                        return '分库4';
+                    default:
+                        return '';
+                }
+            },
+            tableName_zh_CN() {
+                switch(this.tableName) {
+                    case 'weather':
+                        return '天气';
+                    case 'ocean':
+                        return '海洋';
+                    default:
+                        return '';
+                }
+            }
         },
         methods: {
             selectHandler(index, indexPath) {
@@ -96,6 +135,7 @@
 
                 this.dataBaseName = indexPath[0];
                 this.tableName = index.replace(indexPath[0] + '-', '');
+                this.$refs.table.refresh();
             }
         }
 

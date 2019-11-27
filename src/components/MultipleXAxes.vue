@@ -1,7 +1,18 @@
 <template>
-    <div ref="myCharts" style="min-height: 600px;">
 
-    </div>
+    <el-container>
+        <el-header>
+            {{'多 X 轴示例'}}
+        </el-header>
+
+        <el-main>
+            <div ref="myCharts" style="height: 400px"></div>
+        </el-main>
+
+        <el-footer>
+            container-footer
+        </el-footer>
+    </el-container>
 </template>
 
 <script>
@@ -18,14 +29,16 @@
             title: {type: String, default: '多 X 轴示例'}
         },
         mounted() {
-            window.setInterval(() => {
+            this.$nextTick(()=> {
+                this.draw()
+            })
+        },
+        methods: {
+            draw() {
+                window.console.log(this.$refs.myCharts);
                 const myChart = this.$echarts.init(this.$refs.myCharts);
                 let options = {
-
-
-
                     color: this.colors,
-
                     tooltip: {
                         trigger: 'none',
                         axisPointer: {
@@ -110,10 +123,7 @@
                     ]
                 };
                 myChart.setOption(options, true);
-            }, 1000);
-        },
-        methods: {
-
+            }
         }
     }
 </script>

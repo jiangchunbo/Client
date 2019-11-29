@@ -75,6 +75,9 @@
                     <el-tab-pane label="导入" name="import">
                         <Import></Import>
                     </el-tab-pane>
+                    <el-tab-pane label="图像" name="image">
+                        <TabImage></TabImage>
+                    </el-tab-pane>
                 </el-tabs>
             </el-main>
         </el-container>
@@ -85,10 +88,11 @@
     import Import from "@/components/Import";
     import Analysis from "@/components/Analysis";
     import Table from "@/components/Table";
+    import TabImage from "@/components/Tab-Image";
 
     export default {
         components: {
-            Table, Analysis, Import
+            Table, Analysis, Import, TabImage
         },
         data: function () {
             return {

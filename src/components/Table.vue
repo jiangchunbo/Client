@@ -1,19 +1,32 @@
 <template>
     <el-container style="height: 100%; border: 1px solid #eee">
-        <el-header>
-            <div style="margin-top: 10px;">
-                <el-checkbox-group
-                        v-model="checkList[tableName]"
-                        style="display: inline-block"
-                        :min="1">
-                    <el-checkbox v-for="(value, key, index) in this.general[`${this.tableName}`]['properties']" :key="index" :label="key">
-                        {{value.alias}}
-                    </el-checkbox>
-                </el-checkbox-group>
+        <el-header height="150px">
+            <div style="display: flex; justify-content: left; align-items: center; margin-top: 20px;">
+                <span style="margin-right: 20px;">筛选</span>
+                <el-select
+                        v-model="year" placeholder="年"
+                        size="medium" style="margin-right: 20px; width: 150px;">
+                    <el-option
+                            v-for="item in years"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-select
+                        v-model="month" placeholder="月"
+                        size="medium" style="margin-right: 20px; width: 150px;">
+                    <el-option
+                            v-for="item in months"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
 
-                <el-button style="margin-left: 20px;" :loading="loading" type="primary" icon="el-icon-refresh" circle @click="refresh(currentPage, pageSize)"></el-button>
-
-                <el-select style="width: 150px; margin-left: 20px;" v-model="value" placeholder="请选择关键字">
+                <el-select
+                        v-model="type" placeholder="类型"
+                        size="medium" style="margin-right: 20px; width: 150px;">
                     <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -23,13 +36,29 @@
                 </el-select>
 
                 <div class="search-box">
-
                     <input class="search-text" type="text" name="" placeholder="在此输入关键字"/>
                     <a class="search-btn" href="#">
                         <i class="el-icon-search"></i>
                     </a>
                 </div>
+
             </div>
+
+            <div style="display: flex; justify-content: left; align-items: center; margin: 20px 0;">
+                <el-checkbox-group
+                        v-model="checkList[tableName]"
+                        style="display: inline-block"
+                        :min="1">
+                    <el-checkbox v-for="(value, key, index) in this.general[`${this.tableName}`]['properties']"
+                                 :key="index"
+                                 :label="key">
+                        {{value.alias}}
+                    </el-checkbox>
+                </el-checkbox-group>
+                <!--                <el-button style="margin-left: 20px;" :loading="loading" type="primary" icon="el-icon-refresh" circle-->
+                <!--                           @click="refresh(currentPage, pageSize)"></el-button>-->
+            </div>
+
         </el-header>
         <el-main>
             <!-- stripe 有条纹 -->
@@ -95,9 +124,10 @@
 <script>
     import ajax from "@/util/ajax";
 
-
     export default {
-        components: {},
+        components: {
+
+        },
         data: () => {
             return {
                 tableData: [],
@@ -109,23 +139,35 @@
                     ocean: []
                 },
                 loading: false,
-                options: [{
-                    value: '选项1',
-                    label: '黄金糕'
-                }, {
-                    value: '选项2',
-                    label: '双皮奶'
-                }, {
-                    value: '选项3',
-                    label: '蚵仔煎'
-                }, {
-                    value: '选项4',
-                    label: '龙须面'
-                }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
-                value: ''
+                year: '不限',
+                month: '不限',
+                type: '不限',
+                years: [
+                    {
+                        value: '',
+                        label: '不限'
+                    }, {
+                        value: '1999',
+                        label: '1999'
+                    }, {
+                        value: '2000',
+                        label: '2000'
+                    }, {
+                        value: '2001',
+                        label: '2001'
+                    }, {
+                        value: '2002',
+                        label: '2002'
+                    }],
+                months: [
+                    {
+                        value: '',
+                        label: '不限'
+                    }, {
+                        value: '1',
+                        label: '1'
+                    }
+                ],
             }
         },
         props: {
@@ -133,14 +175,12 @@
             tableName: String,
             refreshBreadcrumb: Function
         },
-        watch: {
-
-        },
+        watch: {},
         computed: {
             sortedList() {
                 let result = [];
-                for(let key in this.general.weather.properties) {
-                    if(this.checkList[this.tableName].indexOf(key) !== -1) {
+                for (let key in this.general.weather.properties) {
+                    if (this.checkList[this.tableName].indexOf(key) !== -1) {
                         result.push(key);
                     }
                 }
@@ -195,9 +235,13 @@
 
         mounted() {
             this.checkList.length = 0;
-            Object.keys(this.general.weather.properties).forEach((key) => {this.checkList['weather'].push(key);});
+            Object.keys(this.general.weather.properties).forEach((key) => {
+                this.checkList['weather'].push(key);
+            });
             window.console.log(this.checkList['weather']);
-            Object.keys(this.general['ocean']['properties']).forEach((key) => {this.checkList['ocean'].push(key);});
+            Object.keys(this.general['ocean']['properties']).forEach((key) => {
+                this.checkList['ocean'].push(key);
+            });
             this.refresh();
         }
 
@@ -213,10 +257,10 @@
     }
 
     .search-box {
-        margin: 0 0 0 10px;
+        margin: 0;
         padding: 0;
-        position: absolute;
         display: inline-block;
+        position: relative;
         height: 40px;
         background-color: #409efe;
         border-radius: 40px;
@@ -230,7 +274,6 @@
         outline: none;
         float: left;
         color: white;
-        font-size: 16px;
         transition: 0.4s;
         line-height: 40px;
         width: 0;
@@ -253,4 +296,6 @@
         text-decoration: none;
         color: white;
     }
+
+
 </style>

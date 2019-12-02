@@ -8,6 +8,10 @@
             <el-main style="padding: 20px 0">
                 <router-view></router-view>
             </el-main>
+
+            <el-footer>
+                本产品由 webace 提供技术支持
+            </el-footer>
         </el-container>
     </div>
 </template>

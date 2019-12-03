@@ -2,7 +2,6 @@
     <el-container style="height: 100%; border: 1px solid #eee">
         <el-aside width="150px" style="background-color: #f7f6fb; overflow: hidden">
             <div class="block" style="margin: 20px 0;">
-                <el-avatar :size="50" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
 
                 <div style="margin-top: 10px;" v-if="loggedIn === false">
                     <el-button type="primary" size="mini" round @click="loginFormVisible = true">登录</el-button>
@@ -15,14 +14,16 @@
                     </div>
                 </div>
 
-                <el-dialog title="登录" :visible.sync="loginFormVisible">
+                <el-dialog title="登录" :visible.sync="loginFormVisible" width="30%">
                     <el-form ref="form" status-icon :model="form" label-width="80px">
                         <el-form-item label="用户名" style="width: 100%;">
                             <el-input v-model="form.username"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" style="width: 100%;">
                             <el-input :type="passwordType" v-model="form.password">
-                                <i slot="suffix" class="el-icon-view" @mouseenter="passwordType = 'text'" @mouseleave="passwordType = 'password'" :style="{color: passwordType === 'password' ? '#c0c4cc' : '#409EFF', marginRight: '5px'}"></i>
+                                <i slot="suffix" class="el-icon-view" @mouseenter="passwordType = 'text'"
+                                   @mouseleave="passwordType = 'password'"
+                                   :style="{color: passwordType === 'password' ? '#c0c4cc' : '#409EFF', marginRight: '5px'}"></i>
                             </el-input>
                         </el-form-item>
                     </el-form>
@@ -34,14 +35,12 @@
             </div>
             <!-- 解析表达式 -->
 
-
-            <el-menu
-                    v-if="loggedIn === true"
-                    :default-active="this.$route.path"
-                    text-color="#000"
-                    unique-opened
-                    router>
-                <el-menu-item index="/home/user" style="text-align: left;" v-if="menus.indexOf('user') !== -1">
+            <el-menu v-if="loggedIn"
+                     :default-active="this.$route.path"
+                     text-color="#000"
+                     unique-opened
+                     router>
+                <el-menu-item index="/user" style="text-align: left;" v-if="menus.indexOf('user') !== -1">
                     <template slot="title">
                         <i class="el-icon-user"></i>
                         <span slot="title">用户管理</span>
@@ -54,7 +53,7 @@
                         <i class="el-icon-coin"></i>
                         <span slot="title">数据</span>
                     </template>
-                    <el-menu-item index="/home/data/weather">海洋状况</el-menu-item>
+                    <el-menu-item index="/data/weather">海洋状况</el-menu-item>
                 </el-submenu>
 
             </el-menu>
@@ -86,24 +85,21 @@
                 tableName: 'weather',
                 activeTabName: 'analysis',
                 loginFormVisible: false,
-
                 form: {
-                    username: '',
+                    username: '匿名',
                     password: ''
                 },
                 passwordType: 'password',
-                loggedIn: false,
-                menus: []
+                loggedIn: true,
+                menus: ['user', 'data']
             };
         },
-        computed: {
-
-        },
+        computed: {},
         methods: {
             login() {
                 ajax.post('/login', {
-                   username: this.form.username,
-                   password: this.form.password
+                    username: this.form.username,
+                    password: this.form.password
                 }).then((message) => {
                     this.$message.success("登录成功");
                     this.loggedIn = true;

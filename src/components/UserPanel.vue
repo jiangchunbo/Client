@@ -6,7 +6,7 @@
             <el-button type="primary" round @click="refresh">刷新权限</el-button>
 
 
-            <el-dialog title="创建用户" :visible.sync="dialogFormVisible">
+            <el-dialog title="创建用户" :visible.sync="dialogFormVisible" width="30%">
                 <el-form ref="form" status-icon :rules="rules" :model="form" label-width="80px">
                     <el-form-item label="用户名" style="width: 100%;">
                         <el-input v-model="form.username"></el-input>
@@ -71,10 +71,6 @@
                 </el-table-column>
             </el-table>
         </el-main>
-
-        <el-footer>
-            footer
-        </el-footer>
     </el-container>
 </template>
 
@@ -163,12 +159,6 @@
 
                 });
             }
-        },
-
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                vm.refresh();
-            });
         }
     }
 </script>

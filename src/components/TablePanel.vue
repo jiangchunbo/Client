@@ -8,7 +8,7 @@
 
 <script>
 
-    import Table from "./Table";
+    import Table from "./WeatherPanel";
 
 
     export default {

@@ -165,8 +165,10 @@
             }
         },
 
-        mounted() {
-
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.refresh();
+            });
         }
     }
 </script>

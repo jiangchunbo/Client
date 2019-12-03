@@ -3,15 +3,20 @@
         <el-aside width="150px" style="background-color: #f7f6fb; overflow: hidden">
             <div class="block" style="margin: 20px 0;">
                 <el-avatar :size="50" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"></el-avatar>
+
                 <div style="margin-top: 10px;" v-if="loggedIn === false">
                     <el-button type="primary" size="mini" round @click="loginFormVisible = true">登录</el-button>
                 </div>
+
                 <div v-else>
                     <span>欢迎, {{form.username}}</span>
+                    <div style="margin: 10px 0">
+                        <el-button type="primary" size="mini" round @click="logoutHandler">注销</el-button>
+                    </div>
                 </div>
 
                 <el-dialog title="登录" :visible.sync="loginFormVisible">
-                    <el-form ref="form" status-icon :rules="rules" :model="form" label-width="80px">
+                    <el-form ref="form" status-icon :model="form" label-width="80px">
                         <el-form-item label="用户名" style="width: 100%;">
                             <el-input v-model="form.username"></el-input>
                         </el-form-item>
@@ -28,12 +33,15 @@
                 </el-dialog>
             </div>
             <!-- 解析表达式 -->
+
+
             <el-menu
+                    v-if="loggedIn === true"
                     :default-active="this.$route.path"
                     text-color="#000"
                     unique-opened
                     router>
-                <el-menu-item index="/home/user" style="text-align: left;">
+                <el-menu-item index="/home/user" style="text-align: left;" v-if="menus.indexOf('user') !== -1">
                     <template slot="title">
                         <i class="el-icon-user"></i>
                         <span slot="title">用户管理</span>
@@ -41,7 +49,7 @@
                 </el-menu-item>
 
 
-                <el-submenu index="general" style="text-align: left;">
+                <el-submenu index="general" style="text-align: left;" v-if="menus.indexOf('data') !== -1">
                     <template slot="title">
                         <i class="el-icon-coin"></i>
                         <span slot="title">数据</span>
@@ -84,7 +92,8 @@
                     password: ''
                 },
                 passwordType: 'password',
-                loggedIn: false
+                loggedIn: false,
+                menus: []
             };
         },
         computed: {
@@ -96,9 +105,20 @@
                    username: this.form.username,
                    password: this.form.password
                 }).then((message) => {
-                    this.$message.success(message.request.response);
+                    this.$message.success("登录成功");
                     this.loggedIn = true;
                     this.loginFormVisible = false;
+
+                    this.menus = JSON.parse(message.request.response);
+                }).catch((error) => {
+                    this.$message.error(error.request.response);
+                }).finally();
+            },
+
+            logoutHandler() {
+                ajax.post('/logout', {}).then(() => {
+                    this.$message.success("注销成功");
+                    this.loggedIn = false;
                 }).catch((error) => {
                     this.$message.error(error.request.response);
                 }).finally();

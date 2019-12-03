@@ -1,23 +1,14 @@
 <template>
     <div id="app">
         <el-container style="height: 100%;">
-            <el-header class="header" height="80px">
-                <NavigationBar></NavigationBar>
-            </el-header>
-
-            <el-main style="padding: 20px 0">
+            <el-main style="padding: 0">
                 <router-view></router-view>
             </el-main>
-
-            <el-footer>
-                本产品由 webace 提供技术支持
-            </el-footer>
         </el-container>
     </div>
 </template>
 
 <script>
-    import NavigationBar from "./components/NavigationBar";
 
     export default {
         name: 'app',
@@ -25,7 +16,6 @@
             return {};
         },
         components: {
-            NavigationBar
         }
     }
 </script>
@@ -38,12 +28,5 @@
         text-align: center;
         margin: 0;
         height: 100%;
-    }
-
-
-    .header {
-        display: flex;
-        justify-content: center;
-        box-shadow: 0 0 10px 5px;
     }
 </style>

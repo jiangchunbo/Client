@@ -1,9 +1,6 @@
 <template>
 
-    <el-container>
-        <el-header>
-            {{'多 X 轴示例'}}
-        </el-header>
+    <el-container style="width: 100%; border: 1px solid #eee">
 
         <el-main>
             <div ref="myCharts" style="height: 400px"></div>
@@ -29,14 +26,55 @@
             title: {type: String, default: '多 X 轴示例'}
         },
         mounted() {
-            this.$nextTick(()=> {
-                this.draw()
-            })
         },
         methods: {
-            draw() {
-                window.console.log(this.$refs.myCharts);
+            draw(data) {
+                let legend_data = [];
+                let xAxis = [];
+                let series = [];
+                window.console.log(data.length + ": " + data);
+                for(let i = 0; i < data.length; ++i) {
+                    let dataItem = data[i];
+
+                    let legend = dataItem.legend;
+                    legend_data.push(legend);
+
+                    let xAxisItem = {
+                        type: 'category',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLine: {
+                            onZero: false,
+                            lineStyle: {
+                                color: this.colors[0]
+                            }
+                        },
+                        axisPointer: {
+                            label: {
+                                formatter: function (params) {
+                                    return '降水量  ' + params.value
+                                        + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                                }
+                            }
+                        },
+                        data: dataItem.xAxis_data
+                    };
+                    xAxis.push(xAxisItem);
+
+                    let seriesItem = {
+                        name: legend,
+                        type: 'line',
+                        smooth: true,
+                        data: data[i].content
+                    };
+                    series.push(seriesItem);
+                }
                 const myChart = this.$echarts.init(this.$refs.myCharts);
+
+                window.console.log(legend_data);
+                window.console.log(xAxis);
+                window.console.log(series);
                 let options = {
                     color: this.colors,
                     tooltip: {
@@ -45,9 +83,13 @@
                             type: 'cross'
                         }
                     },
+                    title: [{
+                        left: 'center',
+                        text: 'Gradient along the y axis'
+                    }],
 
                     legend: {
-                        data: ['2015 降水量', '2016 降水量']
+                        data: legend_data
                     },
 
                     grid: {
@@ -55,50 +97,7 @@
                         bottom: 50
                     },
 
-                    xAxis: [
-                        {
-                            type: 'category',
-                            axisTick: {
-                                alignWithLabel: true
-                            },
-                            axisLine: {
-                                onZero: false,
-                                lineStyle: {
-                                    color: this.colors[1]
-                                }
-                            },
-                            axisPointer: {
-                                label: {
-                                    formatter: function (params) {
-                                        return '降水量  ' + params.value
-                                            + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                                    }
-                                }
-                            },
-                            data: ["2016-1", "2016-2", "2016-3", "2016-4", "2016-5", "2016-6", "2016-7", "2016-8", "2016-9", "2016-10", "2016-11", "2016-12"]
-                        },
-                        {
-                            type: 'category',
-                            axisTick: {
-                                alignWithLabel: true
-                            },
-                            axisLine: {
-                                onZero: false,
-                                lineStyle: {
-                                    color: this.colors[0]
-                                }
-                            },
-                            axisPointer: {
-                                label: {
-                                    formatter: function (params) {
-                                        return '降水量  ' + params.value
-                                            + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                                    }
-                                }
-                            },
-                            data: ["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9", "2015-10", "2015-11", "2015-12"]
-                        }
-                    ],
+                    xAxis: xAxis,
 
                     yAxis: [
                         {
@@ -106,21 +105,7 @@
                         }
                     ],
 
-                    series: [
-                        {
-                            name: '2015 降水量',
-                            type: 'line',
-                            xAxisIndex: 1,
-                            smooth: true,
-                            data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-                        },
-                        {
-                            name: '2016 降水量',
-                            type: 'line',
-                            smooth: true,
-                            data: [3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7]
-                        }
-                    ]
+                    series: series
                 };
                 myChart.setOption(options, true);
             }

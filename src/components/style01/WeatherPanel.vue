@@ -1,11 +1,12 @@
 <template>
     <el-container style="border: 1px solid #eee">
         <el-header>
-            <!--            <div style="display: flex; justify-content: left; align-items: center; margin-top: 20px;">-->
-            <!--                <span style="margin-right: 20px;">筛选</span>-->
+            表格区域
+            <!--            <div style01="display: flex; justify-content: left; align-items: center; margin-top: 20px;">-->
+            <!--                <span style01="margin-right: 20px;">筛选</span>-->
             <!--                <el-select-->
             <!--                        v-model="year" placeholder="年"-->
-            <!--                        size="medium" style="margin-right: 20px; width: 150px;">-->
+            <!--                        size="medium" style01="margin-right: 20px; width: 150px;">-->
             <!--                    <el-option-->
             <!--                            v-for="item in years"-->
             <!--                            :key="item.value"-->
@@ -15,7 +16,7 @@
             <!--                </el-select>-->
             <!--                <el-select-->
             <!--                        v-model="month" placeholder="月"-->
-            <!--                        size="medium" style="margin-right: 20px; width: 150px;">-->
+            <!--                        size="medium" style01="margin-right: 20px; width: 150px;">-->
             <!--                    <el-option-->
             <!--                            v-for="item in months"-->
             <!--                            :key="item.value"-->
@@ -26,7 +27,7 @@
 
             <!--                <el-select-->
             <!--                        v-model="type" placeholder="类型"-->
-            <!--                        size="medium" style="margin-right: 20px; width: 150px;">-->
+            <!--                        size="medium" style01="margin-right: 20px; width: 150px;">-->
             <!--                    <el-option-->
             <!--                            v-for="item in options"-->
             <!--                            :key="item.value"-->
@@ -44,8 +45,8 @@
 
             <!--            </div>-->
 
-            <!--            <div style="display: flex; justify-content: left; align-items: center; margin: 20px 0;">-->
-            <!--                <el-checkbox-group v-model="checkList[tableName]" style="display: inline-block" :min="1">-->
+            <!--            <div style01="display: flex; justify-content: left; align-items: center; margin: 20px 0;">-->
+            <!--                <el-checkbox-group v-model="checkList[tableName]" style01="display: inline-block" :min="1">-->
             <!--                    <el-checkbox label="id">标识符</el-checkbox>-->
             <!--                    <el-checkbox label="gmt_create">创建时间</el-checkbox>-->
             <!--                    <el-checkbox label="gmt_modified">修改日期</el-checkbox>-->
@@ -53,7 +54,7 @@
             <!--                    <el-checkbox label="humidity">密度</el-checkbox>-->
             <!--                    <el-checkbox label="pressure">大气压</el-checkbox>-->
             <!--                </el-checkbox-group>-->
-            <!--                &lt;!&ndash;                <el-button style="margin-left: 20px;" :loading="loading" type="primary" icon="el-icon-refresh" circle&ndash;&gt;-->
+            <!--                &lt;!&ndash;                <el-button style01="margin-left: 20px;" :loading="loading" type="primary" icon="el-icon-refresh" circle&ndash;&gt;-->
             <!--                &lt;!&ndash;                           @click="refresh(currentPage, pageSize)"></el-button>&ndash;&gt;-->
             <!--            </div>-->
         </el-header>

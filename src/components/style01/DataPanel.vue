@@ -1,33 +1,37 @@
 <template>
     <el-container>
+
         <el-header>
-            <el-row :gutter="10">
-                <el-col :span="12">
-                    <el-form :model="dynamicForm" ref="dynamicForm" label-width="100px" class="demo-dynamic">
-                        <el-form-item v-for="(year, index) in dynamicForm.years" :key="index">
-                            <div class="block">
-                                <el-date-picker
-                                        v-model="year.value"
-                                        type="year"
-                                        placeholder="选择年"
-                                        @change="changeHandler">
-                                </el-date-picker>
-                            </div>
-                        </el-form-item>
-
-                    </el-form>
-
-                    <el-button @click="addYear">新增</el-button>
-                </el-col>
-            </el-row>
+            同类型数据互比
         </el-header>
 
         <el-main>
-            <el-row>
-                <el-col :span="12">
+            <el-row :gutter="10">
+                <el-col :span="4">
+                    <el-container style="border: 1px solid #eeeeee">
+                        <el-header>选择区域(只有2015 2016 有数据)</el-header>
+                        <el-main>
+                            <el-form :model="dynamicForm" ref="dynamicForm" class="demo-dynamic">
+                                <el-form-item v-for="(year, index) in dynamicForm.years" :key="index">
+                                    <div class="block">
+                                        <el-date-picker
+                                                v-model="year.value"
+                                                type="year"
+                                                placeholder="选择年"
+                                                @change="changeHandler">
+                                        </el-date-picker>
+                                    </div>
+                                </el-form-item>
+                            </el-form>
+                            <el-button @click="addYear">新增</el-button>
+                        </el-main>
+                    </el-container>
+                </el-col>
+
+                <el-col :span="10">
                     <WeatherPanel></WeatherPanel>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="10">
                     <MultipleXAxes ref="multipleXAxes"></MultipleXAxes>
                 </el-col>
             </el-row>
@@ -39,8 +43,9 @@
 
 <script>
 
-    import WeatherPanel from "@/components/WeatherPanel";
-    import MultipleXAxes from "@/components/MultipleXAxes";
+    import WeatherPanel from "@/components/style01/WeatherPanel";
+    import MultipleXAxes from "@/components/style01/MultipleXAxes";
+
     export default {
         name: "DataPanel",
         components: {MultipleXAxes, WeatherPanel},
@@ -71,16 +76,16 @@
         methods: {
             changeHandler() {
                 this.data.length = 0;
-                window.console.log('看看有哪些人在里面' + JSON.stringify(this.dynamicForm.years) );
-                for(let i = 0; i < this.dynamicForm.years.length; ++i) {
+                window.console.log('看看有哪些人在里面' + JSON.stringify(this.dynamicForm.years));
+                for (let i = 0; i < this.dynamicForm.years.length; ++i) {
                     let year = this.dynamicForm.years[i].value.getFullYear();
-                    if(year === 2016) {
+                    if (year === 2016) {
                         this.data.push({
                             legend: '2016 降水量',
                             xAxis_data: this.year2016,
                             content: this.data2016
                         });
-                    } else if(year === 2015) {
+                    } else if (year === 2015) {
                         this.data.push({
                             legend: '2015 降水量',
                             xAxis_data: this.year2015,

@@ -43,7 +43,7 @@
                 <el-menu-item index="/user" style="text-align: left;" v-if="menus.indexOf('user') !== -1">
                     <template slot="title">
                         <i class="el-icon-user"></i>
-                        <span slot="title">用户管理</span>
+                        <span slot="title">用户</span>
                     </template>
                 </el-menu-item>
 
@@ -53,7 +53,11 @@
                         <i class="el-icon-coin"></i>
                         <span slot="title">数据</span>
                     </template>
-                    <el-menu-item index="/data/weather">海洋状况</el-menu-item>
+                    <el-menu-item index="/data/style01">样式01</el-menu-item>
+                    <el-menu-item index="/data/style02">样式02</el-menu-item>
+                    <el-menu-item index="/data/style03">样式03</el-menu-item>
+                    <el-menu-item index="/data/style04">样式04</el-menu-item>
+                    <el-menu-item index="/data/style05">样式05</el-menu-item>
                 </el-submenu>
 
             </el-menu>

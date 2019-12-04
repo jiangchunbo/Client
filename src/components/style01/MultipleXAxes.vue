@@ -2,13 +2,13 @@
 
     <el-container style="width: 100%; border: 1px solid #eee">
 
+        <el-header>
+            图像区域
+        </el-header>
+
         <el-main>
             <div ref="myCharts" style="height: 400px"></div>
         </el-main>
-
-        <el-footer>
-            container-footer
-        </el-footer>
     </el-container>
 </template>
 
@@ -83,10 +83,6 @@
                             type: 'cross'
                         }
                     },
-                    title: [{
-                        left: 'center',
-                        text: 'Gradient along the y axis'
-                    }],
 
                     legend: {
                         data: legend_data

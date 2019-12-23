@@ -1,74 +1,35 @@
 <template>
-    <el-container style="height: 100%; border: 1px solid #eee">
-        <el-aside width="150px" style="background-color: #f7f6fb; overflow: hidden">
-            <div class="block" style="margin: 20px 0;">
-
-                <div style="margin-top: 10px;" v-if="loggedIn === false">
-                    <el-button type="primary" size="mini" round @click="loginFormVisible = true">登录</el-button>
-                </div>
-
-                <div v-else>
-                    <span>欢迎, {{form.username}}</span>
-                    <div style="margin: 10px 0">
-                        <el-button type="primary" size="mini" round @click="logoutHandler">注销</el-button>
-                    </div>
-                </div>
-
-                <el-dialog title="登录" :visible.sync="loginFormVisible" width="30%">
-                    <el-form ref="form" status-icon :model="form" label-width="80px">
-                        <el-form-item label="用户名" style="width: 100%;">
-                            <el-input v-model="form.username"></el-input>
-                        </el-form-item>
-                        <el-form-item label="密码" style="width: 100%;">
-                            <el-input :type="passwordType" v-model="form.password">
-                                <i slot="suffix" class="el-icon-view" @mouseenter="passwordType = 'text'"
-                                   @mouseleave="passwordType = 'password'"
-                                   :style="{color: passwordType === 'password' ? '#c0c4cc' : '#409EFF', marginRight: '5px'}"></i>
-                            </el-input>
-                        </el-form-item>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="loginFormVisible = false">取 消</el-button>
-                        <el-button type="primary" @click="login">登录</el-button>
-                    </div>
-                </el-dialog>
-            </div>
-            <!-- 解析表达式 -->
-
-            <el-menu v-if="loggedIn"
-                     :default-active="this.$route.path"
-                     text-color="#000"
-                     unique-opened
-                     router>
-                <el-menu-item index="/user" style="text-align: left;" v-if="menus.indexOf('user') !== -1">
-                    <template slot="title">
-                        <i class="el-icon-user"></i>
-                        <span slot="title">用户</span>
-                    </template>
-                </el-menu-item>
-
-
-                <el-submenu index="general" style="text-align: left;" v-if="menus.indexOf('data') !== -1">
-                    <template slot="title">
-                        <i class="el-icon-coin"></i>
-                        <span slot="title">数据</span>
-                    </template>
-                    <el-menu-item index="/data/style01">样式01</el-menu-item>
-                    <el-menu-item index="/data/style02">样式02</el-menu-item>
-                    <el-menu-item index="/data/style03">样式03</el-menu-item>
-                    <el-menu-item index="/data/style04">样式04</el-menu-item>
-                    <el-menu-item index="/data/style05">样式05</el-menu-item>
-                </el-submenu>
-
-            </el-menu>
-        </el-aside>
-
+    <div>
         <el-container>
-            <el-main>
-                <router-view></router-view>
-            </el-main>
+            <el-header class="home-header"></el-header>
+            <el-container>
+                <el-aside width="180px">
+                    <div>
+                        <el-menu unique-opened router>
+                            <el-menu-item index="/home/basic">
+                                <span slot="title">基础数据查询</span>
+                            </el-menu-item>
+                            <el-menu-item index="">
+                                <span slot="title">基础数据管理</span>
+                            </el-menu-item>
+                            <el-menu-item index="">
+                                <span slot="title">高级数据查询</span>
+                            </el-menu-item>
+                            <el-menu-item index="">
+                                <span slot="title">高级数据分析</span>
+                            </el-menu-item>
+                            <el-menu-item index="/home/assemble">
+                                <span slot="title">数据汇集管理</span>
+                            </el-menu-item>
+                        </el-menu>
+                    </div>
+                </el-aside>
+                <el-main>
+                    <router-view></router-view>
+                </el-main>
+            </el-container>
         </el-container>
-    </el-container>
+    </div>
 </template>
 
 <script>
@@ -98,7 +59,9 @@
                 menus: ['user', 'data']
             };
         },
-        computed: {},
+        computed: {
+
+        },
         methods: {
             login() {
                 ajax.post('/login', {

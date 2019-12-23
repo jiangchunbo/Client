@@ -18,14 +18,15 @@
         name: "MultipleXAxes",
         data: () => {
             return {
-                chart: null,
-                colors: ['#5793f3', '#d14a61', '#675bba']
+                chart: Object
             }
         },
         props: {
             title: {type: String, default: '多 X 轴示例'}
         },
         mounted() {
+
+            this.chart = this.$echarts.init(this.$refs.myCharts);
         },
         methods: {
             draw(data) {
@@ -45,14 +46,13 @@
                             alignWithLabel: true
                         },
                         axisLine: {
-                            onZero: false,
-                            lineStyle: {
-                                color: this.colors[0]
-                            }
+                            onZero: false
                         },
                         axisPointer: {
                             label: {
                                 formatter: function (params) {
+                                    window.console.log(params);
+                                    window.console.log('sss' + params.seriesData);
                                     return '降水量  ' + params.value
                                         + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
                                 }
@@ -70,13 +70,11 @@
                     };
                     series.push(seriesItem);
                 }
-                const myChart = this.$echarts.init(this.$refs.myCharts);
 
                 window.console.log(legend_data);
                 window.console.log(xAxis);
                 window.console.log(series);
                 let options = {
-                    color: this.colors,
                     tooltip: {
                         trigger: 'none',
                         axisPointer: {
@@ -103,7 +101,7 @@
 
                     series: series
                 };
-                myChart.setOption(options, true);
+                this.chart.setOption(options, true);
             }
         }
     }

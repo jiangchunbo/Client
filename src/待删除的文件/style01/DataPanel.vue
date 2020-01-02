@@ -43,8 +43,8 @@
 
 <script>
 
-    import WeatherPanel from "@/components/style01/WeatherPanel";
-    import MultipleXAxes from "@/components/style01/MultipleXAxes";
+    import WeatherPanel from "@/待删除的文件/style01/WeatherPanel";
+    import MultipleXAxes from "@/待删除的文件/style01/MultipleXAxes";
 
     export default {
         name: "DataPanel",

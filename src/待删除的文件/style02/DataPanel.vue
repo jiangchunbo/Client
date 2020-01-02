@@ -21,7 +21,7 @@
                         textBorderColor: '#333',
                         textBorderWidth: 2
                     }
-                }
+                };
                 let options = {
                     title: {
                         text: '标题',

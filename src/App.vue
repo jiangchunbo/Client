@@ -17,4 +17,24 @@
         margin: 0;
         height: 100%;
     }
+
+
+    .el-container, .el-header, .el-aside, .el-footer, .el-main {
+        padding: 0 !important;
+    }
+
+    .table-expand {
+        font-size: 0;
+    }
+
+    .table-expand label {
+        width: 200px;
+        color: #99a9bf;
+    }
+
+    .table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 100%;
+    }
 </style>

@@ -1,15 +1,15 @@
 <template>
-    <el-form :model="loginForm" :rules="rules">
+    <el-form :model="form" :rules="rules">
         <h3>系统登录</h3>
         <el-form-item prop="username">
-            <el-input type="text" v-model="loginForm.username" autocomplete="off" placeholder="在此输入用户名"></el-input>
+            <el-input type="text" v-model="form.username" autocomplete="off" placeholder="在此输入用户名"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-            <el-input type="password" v-model="loginForm.password" autocomplete="off" placeholder="在此输入密码"></el-input>
+            <el-input type="password" v-model="form.password" autocomplete="off" placeholder="在此输入密码"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="loginHandler">登录</el-button>
-            <el-button type="primary">匿名</el-button>
+            <el-button type="primary" @click="anonymousHandler">匿名</el-button>
         </el-form-item>
     </el-form>
 </template>
@@ -19,6 +19,10 @@
         name: "Login",
         data() {
             return {
+                form: {
+                    username: 'admin',
+                    password: '123'
+                },
                 rules: {
                     username: [
                         {
@@ -30,11 +34,6 @@
                             required: true, message: '请输入密码', trigger: 'blur'
                         }
                     ]
-                },
-                checked: true,
-                loginForm: {
-                    username: 'admin',
-                    password: '123'
                 },
                 loading: false
             }
@@ -48,6 +47,18 @@
 
                 this.loading = false;
                 // this.$store.commit();
+                this.$store.commit('refreshUser', {
+                    role: 'system',
+                    menus: ['basic', 'senior', 'assemble']
+                });
+                this.$router.replace({path: '/home'});
+            },
+            anonymousHandler: function() {
+
+                this.$store.commit('refreshUser', {
+                    role: 'anonymous',
+                    menus: ['basic']
+                });
                 this.$router.replace({path: '/home'});
             }
         }

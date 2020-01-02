@@ -12,6 +12,15 @@ const hostname = '127.0.0.1';
 const port = 80;
 
 
+
+
+
+
+
+
+
+
+
 /* Url.parse 之后有属性形如 path = '/user', pathname = '/user?id=1' */
 Http.createServer((request, response) => {
     let requestBody = [];

@@ -14,7 +14,7 @@ instance.interceptors.response.use((message) => {
     window.console.log('onRejected');
     window.console.log(error);
     window.console.log(JSON.stringify(error));
-    window.console.log(error.response);
+    window.console.log('error.response', error.response);
     if (!error.response) {
         Message.error('服务器无响应');
     }
@@ -30,6 +30,12 @@ export default {
 
     get: (path, params) => {
         return instance.get(path, {
+            params: params
+        });
+    },
+
+    delete: (path, params) => {
+        return instance.delete(path, {
             params: params
         });
     }

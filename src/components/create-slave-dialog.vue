@@ -24,7 +24,7 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="newSlaveFormVisible = false">取 消</el-button>
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="createSlaveSubmit">确 定</el-button>
         </div>
     </el-dialog>
@@ -73,12 +73,12 @@
                 this.$refs.newSlaveForm.validate((valid) => {
                     if (valid) {
                         this.$ajax.post('/replication/master/change', {
-                            host: this.form.Master_Host,
-                            port: this.form.Master_Port === '' ? '3306' : this.form.Master_Port,
-                            user: this.form.Master_User === '' ? 'root' : this.form.Master_User,
-                            password: this.form.Master_Password,
-                            connectRetry: this.form.Connect_Retry === '' ? '60' : this.form.Connect_Retry,
-                            channelName: this.form.Channel_Name
+                            'host': this.form.Master_Host,
+                            'port': this.form.Master_Port === '' ? '3306' : this.form.Master_Port,
+                            'user': this.form.Master_User === '' ? 'root' : this.form.Master_User,
+                            'password': this.form.Master_Password,
+                            'connectretry': this.form.Connect_Retry === '' ? '60' : this.form.Connect_Retry,
+                            'channel': this.form.Channel_Name
                         }).then((message) => {
                             this.$message.success(message.data);
                             this.dialogFormVisible = false; // 配置成功则关闭对话框

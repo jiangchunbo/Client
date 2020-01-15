@@ -1,168 +1,81 @@
 <template>
-    <el-container>
-        <el-header>
-            <el-form inline>
-                <el-form-item>
-                    <el-date-picker v-model="date" type="date" placeholder="选择日期"></el-date-picker>
-                </el-form-item>
-
-            </el-form>
+    <el-container class="wic-container">
+        <el-header class="wic-container-header" height="50px">
+            <span class="wic-container-title">高级数据管理</span>
         </el-header>
-
         <el-main>
-
-            <el-row :gutter="10">
-                <el-col :span="12">
-                    <el-table :data="data" height="600px">
-                        <el-table-column label="测量船号" prop="ywId"></el-table-column>
-                        <el-table-column label="时间" prop="time"></el-table-column>
-                        <el-table-column label="设备" prop="equipment"></el-table-column>
-                        <el-table-column label="距离" prop="distance"></el-table-column>
-                        <el-table-column label="俯仰角" prop="pitch"></el-table-column>
-                        <el-table-column label="方位角" prop="azimuth"></el-table-column>
-                        <el-table-column label="轴系误差参数" prop="parameter"></el-table-column>
-                        <el-table-column label="与 GPS 比对方位误差" prop="radGpsDa"></el-table-column>
-                        <el-table-column label="与 GPS 比对俯仰误差" prop="radGpsDe"></el-table-column>
-                        <el-table-column label="与 GPS 比对斜距误差" prop="radGpsDr"></el-table-column>
-                        <el-table-column label="设备精度" prop="jd"></el-table-column>
-                    </el-table>
+            <basic-query-form  style="padding-top: 15px;"></basic-query-form>
+            <div>
+                <el-button type="primary" @click="queryHandler">筛选查询</el-button>
+                <el-button type="primary" @click="createHandler">添加数据</el-button>
+                <el-button type="primary" @click="createHandler">删除所选范围的数据</el-button>
+            </div>
+            <el-row style="padding-bottom: 15px;">
+                <el-col :span="10">
+                    <div class="wrapper">
+                        <el-table border :data="data" height="600px">
+                            <el-table-column label="时间" prop="createTime"></el-table-column>
+                            <el-table-column label="测量船号" prop="ywId"></el-table-column>
+                            <el-table-column label="设备" prop="equipmentType"></el-table-column>
+                            <el-table-column label="距离" prop="rd"></el-table-column>
+                            <el-table-column label="方位角" prop="ad"></el-table-column>
+                            <el-table-column label="俯仰角" prop="ed"></el-table-column>
+                            <el-table-column label="测速" prop="vd"></el-table-column>
+                            <el-table-column label="与 GPS 比对方位误差" prop="gpsDa"></el-table-column>
+                            <el-table-column label="与 GPS 比对俯仰误差" prop="gpsDe"></el-table-column>
+                            <el-table-column label="与 GPS 比对斜距误差" prop="gpsDr"></el-table-column>
+                        </el-table>
+                    </div>
                 </el-col>
-                <el-col :span="12" style="overflow: auto">
-                    <div style="height: 600px; overflow: auto">
+                <el-col :span="14">
+                    <div class="wrapper" style="padding: 0 5px; height: 600px; overflow: auto">
                         <el-collapse>
-                            <el-collapse-item title="关联性分析 —— 方位比对残差">
+                            <el-collapse-item title="关联性分析 —— ML_GPS_A">
                                 <el-form inline>
                                     <el-form-item>
-                                        <el-select size="mini" v-model="yAxisUnit_ML_GPS[0]" placeholder="单位选择">
-                                            <el-option label="弧度制 ( rad ) " value="rad"></el-option>
-                                            <el-option label="角度制 ( '' )" value="second"></el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item>
                                         <el-button size="mini" type="primary"
-                                                   @click="drawLineChart('ML_GPS_A', 'ML-GPS A', 'ML_ED', 'GpsDa', yAxisUnit_ML_GPS[0], 'degree')">生成 ML-GPS A 图
+                                                   @click="drawLineChart('ML_GPS_A', 'ML-GPS A', 'ML_ED', 'gpsDa')">生成 ML-GPS A 图
                                         </el-button>
                                     </el-form-item>
                                 </el-form>
                                 <div ref="ML_GPS_A" style="width: 800px; height: 300px;"></div>
                             </el-collapse-item>
-                            <el-collapse-item title="关联性分析 —— 俯仰比对残差">
+                            <el-collapse-item title="关联性分析 —— ML_GPS_E">
                                 <el-form inline>
                                     <el-form-item>
-                                        <el-select size="mini" v-model="yAxisUnit_ML_GPS[1]" placeholder="单位选择"
-                                                   @change="selectHandler">
-                                            <el-option label="弧度制 ( rad ) " value="rad"></el-option>
-                                            <el-option label="角度制 ( '' )" value="second"></el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item>
                                         <el-button size="mini" type="primary"
-                                                   @click="drawLineChart('ML_GPS_E', 'ML-GPS E', 'ML_ED', 'GpsDe', yAxisUnit_ML_GPS[1], 'degree')">生成 ML-GPS E 图
+                                                   @click="drawLineChart('ML_GPS_E', 'ML-GPS E', 'ML_ED', 'gpsDe')">生成 ML-GPS E 图
                                         </el-button>
                                     </el-form-item>
                                 </el-form>
 
                                 <div ref="ML_GPS_E" style="width: 800px; height: 300px;"></div>
                             </el-collapse-item>
-                            <el-collapse-item title="关联性分析 —— 斜距比对残差">
+                            <el-collapse-item title="关联性分析 —— ML_GPS_R">
                                 <el-form inline>
                                     <el-form-item>
-                                        <el-select size="mini" v-model="yAxisUnit_ML_GPS[2]" placeholder="单位选择">
-                                            <el-option label="弧度制 ( rad ) " value="rad"></el-option>
-                                            <el-option label="角度制 ( '' )" value="second"></el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item>
                                         <el-button size="mini" type="primary"
-                                                   @click="drawLineChart('ML_GPS_R', 'ML-GPS R', 'ML_ED', 'GpsDr', yAxisUnit_ML_GPS[2], 'degree')">生成 ML-GPS A 图
+                                                   @click="drawLineChart('ML_GPS_R', 'ML-GPS R', 'ML_ED', 'gpsDr')">生成 ML-GPS A 图
                                         </el-button>
                                     </el-form-item>
                                 </el-form>
                                 <div ref="ML_GPS_R" style="width: 800px; height: 300px;"></div>
                             </el-collapse-item>
                         </el-collapse>
-
                     </div>
-<!---->
-<!--                        <el-collapse-item title="关联性分析 —— ML-GPS R">-->
-<!--                            <el-form inline>-->
-<!--                                <el-form-item>-->
-<!--                                    <el-select size="mini" v-model="yAxisUnit_ML_GPS[2]" placeholder="单位选择"-->
-<!--                                               @change="selectHandler">-->
-<!--                                        <el-option label="弧度制 ( rad ) " value="rad"></el-option>-->
-<!--                                        <el-option label="角度制 ( ° ) " value="degree"></el-option>-->
-<!--                                        <el-option label="角度制 ( ' )" value="minute"></el-option>-->
-<!--                                        <el-option label="角度制 ( '' )" value="second"></el-option>-->
-<!--                                    </el-select>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item>-->
-<!--                                    <el-button size="mini" type="primary"-->
-<!--                                               @click="drawLineChart('ML_GPS_R', 'GpsDr', yAxisUnit_ML_GPS[2])">绘制曲线图-->
-<!--                                    </el-button>-->
-<!--                                </el-form-item>-->
-<!--                            </el-form>-->
-
-<!--                            <div ref="ML_GPS_R" style="width: 600px; height: 300px;"></div>-->
-<!--                        </el-collapse-item>-->
-
-<!--                        <el-collapse-item title="关联性分析 —— USB-GPS A">-->
-<!--                            <el-form inline>-->
-<!--                                <el-form-item>-->
-<!--                                    <el-select size="mini" v-model="yAxisUnit_USB_GPS[0]" placeholder="单位选择"-->
-<!--                                               @change="selectHandler">-->
-<!--                                        <el-option label="弧度制" value="rad"></el-option>-->
-<!--                                        <el-option label="角度制" value="angle"></el-option>-->
-<!--                                    </el-select>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item>-->
-<!--                                    <el-button size="mini" type="primary" @click="drawLineChart">绘制曲线图</el-button>-->
-<!--                                </el-form-item>-->
-<!--                            </el-form>-->
-
-<!--                            <div ref="lineChart" style="width: 500px; height: 300px;"></div>-->
-<!--                        </el-collapse-item>-->
-<!--                        <el-collapse-item title="关联性分析 —— USB-GPS E">-->
-<!--                            <el-form inline>-->
-<!--                                <el-form-item>-->
-<!--                                    <el-select size="mini" v-model="yAxisUnit_USB_GPS[1]" placeholder="单位选择"-->
-<!--                                               @change="selectHandler">-->
-<!--                                        <el-option label="弧度制" value="rad"></el-option>-->
-<!--                                        <el-option label="角度制" value="angle"></el-option>-->
-<!--                                    </el-select>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item>-->
-<!--                                    <el-button size="mini" type="primary" @click="drawLineChart">绘制曲线图</el-button>-->
-<!--                                </el-form-item>-->
-<!--                            </el-form>-->
-
-<!--                            <div ref="lineChart2" style="width: 500px; height: 300px;"></div>-->
-<!--                        </el-collapse-item>-->
-<!--                        <el-collapse-item title="关联性分析 —— USB-GPS R">-->
-<!--                            <el-form inline>-->
-<!--                                <el-form-item>-->
-<!--                                    <el-select size="mini" v-model="yAxisUnit_USB_GPS[2]" placeholder="单位选择"-->
-<!--                                               @change="selectHandler">-->
-<!--                                        <el-option label="弧度制" value="rad"></el-option>-->
-<!--                                        <el-option label="角度制" value="angle"></el-option>-->
-<!--                                    </el-select>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item>-->
-<!--                                    <el-button size="mini" type="primary" @click="drawLineChart">绘制曲线图</el-button>-->
-<!--                                </el-form-item>-->
-<!--                            </el-form>-->
-
-<!--                            <div ref="lineChart2" style="width: 500px; height: 300px;"></div>-->
-<!--                        </el-collapse-item>-->
-
                 </el-col>
             </el-row>
         </el-main>
-
     </el-container>
 </template>
 
 <script>
+    import BasicQueryForm from "@/pages/basic/basic-query-form";
+
     export default {
+        components: {
+            BasicQueryForm
+        },
         data() {
             return {
                 data: [],
@@ -188,7 +101,7 @@
             },
 
             randomNormalDistribution() {
-                var u = 0.0, v = 0.0, w = 0.0, c = 0.0;
+                let u = 0.0, v = 0.0, w = 0.0, c = 0.0;
                 do {
                     //获得两个（-1,1）的独立随机变量
                     u = Math.random() * 2 - 1.0;
@@ -208,19 +121,14 @@
                 return mean + (this.randomNormalDistribution() * std);
             },
 
-            drawLineChart(ref, yAxisName1, yAxisName2, target, unit1, unit2) {
+            drawLineChart(ref, yAxisName1, yAxisName2, yAxisField1) {
                 let chart = this.$echarts.init(this.$refs[ref]);
                 let option = {
                     title: {
-                        text: this.title,
-                        subtext: this.subtitle,
-                        x: 'center',
-                        align: 'right'
+                        text: this.title, subtext: this.subtitle, x: 'center', align: 'right'
                     },
                     grid: {
-                        right: 180,
-                        left: 180,
-                        bottom: 80
+                        right: 180, left: 180, bottom: 80
                     },
                     toolbox: {
                         feature: {
@@ -228,7 +136,8 @@
                                 yAxisIndex: 'none'
                             },
                             restore: {},
-                            saveAsImage: {}
+                            saveAsImage: {},
+                            dataView: {show: true, readOnly: false}
                         }
                     },
                     tooltip: {
@@ -253,20 +162,19 @@
                         }
                     ],
                     dataset: {
-                        dimensions: ['ywId', 'time', 'equipment', 'distance', 'pitch', 'azimuth', 'parameter', 'radGpsDa', 'radGpsDe', 'radGpsDr',
-                            'degreeGpsDa', 'degreeGpsDe', 'degreeGpsDr', 'minuteGpsDa', 'minuteGpsDe', 'minuteGpsDr', 'secondGpsDa', 'secondGpsDe', 'secondGpsDr', 'jd'],
+                        dimensions: [
+                            'createTime', 'ywId', 'equipmentType', 'rd', 'ad', 'ed', 'vd', 'gpsDa', 'gpsDe', 'gpsDr'
+                        ],
                         source: this.data
                     },
                     xAxis: [
                         {
-                            type: 'category',
-                            boundaryGap: false,
-                            axisLine: {onZero: false}
+                            type: 'category'
                         }
                     ],
                     yAxis: [
                         {
-                            name: yAxisName1 + ' ( 单位: ' + unit1 + ' ) ',
+                            name: yAxisName1 + ' ( 单位: ° ) ',
                             nameLocation: 'end',
                             type: 'value',
                             splitNumber: 4,
@@ -288,7 +196,7 @@
                             }
                         },
                         {
-                            name: yAxisName2 + ' ( 单位: ' + unit2 + ' ) ',
+                            name: yAxisName2 + ' ( 单位: \'\' ) ',
                             nameLocation: 'end',
                             type: 'value',
                             splitNumber: 4,
@@ -314,28 +222,27 @@
                         {
                             name: yAxisName1,
                             type: 'line',
-                            animation: false,
                             lineStyle: {
                                 width: 1,
                                 color: '#080dfc'
                             },
                             encode: {
-                                x: 'time',
-                                y: unit1 + 'GpsDa'
-                            }
+                                x: 'createTime',
+                                y: yAxisField1
+                            },
+
                         },
                         {
                             name: yAxisName2,
                             type: 'line',
                             yAxisIndex: 1,
-                            animation: false,
                             lineStyle: {
                                 width: 1,
                                 color: '#b74c4b'
                             },
                             encode: {
-                                x: 'time',
-                                y: 'pitch'
+                                x: 'createTime',
+                                y: 'ed'
                             },
                             axisLabel: {
                                 show: true
@@ -350,45 +257,35 @@
             }
         },
         mounted() {
-            for (let i = 0; i < 500; ++i) {
+            for (let i = 0; i < 10; ++i) {
                 let num = this.getNumberInNormalDistribution(0.0002795851449409, 0.00001);
-                let num2 = this.getNumberInNormalDistribution(0.1637561173269462, 0.00001);
-                let degreeGpsDa = num * 180 / Math.PI;
-                let degreeGpsDe = num * 180 / Math.PI;
-                let degreeGpsDr = num * 180 / Math.PI;
-                let minuteGpsDa = degreeGpsDa * 60;
-                let minuteGpsDe = degreeGpsDe * 60;
-                let minuteGpsDr = degreeGpsDr * 60;
-                let secondGpsDa = minuteGpsDa * 60;
-                let secondGpsDe = minuteGpsDe * 60;
-                let secondGpsDr = minuteGpsDr * 60;
+                let num2 = this.getNumberInNormalDistribution(0.16, 0.00001);
+                let num3 = this.getNumberInNormalDistribution(0.17, 0.00001);
+                let num4 = this.getNumberInNormalDistribution(0.18, 0.00001);
                 this.data.push({
-                    ywId: '船号',
-                    time: i,
-                    equipment: 'USB',
-                    distance: '距离',
-                    pitch: num2 * 180 / Math.PI,
-                    azimuth: '方位角',
-                    parameter: '轴系误差参数',
-                    radGpsDa: num,
-                    radGpsDe: num,
-                    radGpsDr: num,
-                    degreeGpsDa: degreeGpsDa,
-                    degreeGpsDe: degreeGpsDe,
-                    degreeGpsDr: degreeGpsDr,
-                    minuteGpsDa: minuteGpsDa,
-                    minuteGpsDe: minuteGpsDe,
-                    minuteGpsDr: minuteGpsDr,
-                    secondGpsDa: secondGpsDa,
-                    secondGpsDe: secondGpsDe,
-                    secondGpsDr: secondGpsDr,
-                    jd: '设备精度'
+                    'createTime': '时间' + i,
+                    'ywId': '远望' + i + '号',
+                    'equipmentType': '设备' + i,
+                    'rd': '斜距' + i,
+                    'ad': '方位角' + i,
+                    'ed': num,
+                    'vd': '测速' + i,
+                    'gpsDa': num2,
+                    'gpsDe': num3,
+                    'gpsDr': num4
                 });
             }
+            window.console.log(this.data);
         }
     }
 </script>
 
 <style scoped>
 
+    .wrapper {
+        background-color: white;
+        margin: 15px 0 0 10px;
+        border-radius: 3px;
+        box-shadow: 0 0 1px rgba(0,0,0,.125),0 1px 3px rgba(0,0,0,.2);
+    }
 </style>

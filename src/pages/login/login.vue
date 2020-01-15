@@ -19,10 +19,7 @@
         name: "Login",
         data() {
             return {
-                form: {
-                    username: 'admin',
-                    password: '123'
-                },
+                form: { username: 'admin', password: '123' },
                 rules: {
                     username: [
                         {
@@ -42,17 +39,24 @@
         methods: {
             loginHandler: function() {
                 this.loading = true;
-
-                // 模拟登录过程
-
-                this.loading = false;
-                // this.$store.commit();
-                this.$store.commit('refreshUser', {
-                    role: 'system',
-                    menus: ['basic', 'senior', 'assemble']
-                });
-                this.$router.replace({path: '/home'});
+                this.loginSubmit();
             },
+
+            loginSubmit: function() {
+                this.$ajax.post('/login', {
+                    'username': this.form.username,
+                    'password': this.form.password
+                }).then((message) => {
+                    this.$message.success(message.data.message);
+                    this.loading = false;
+                    this.$store.commit('refreshUser', {
+                        role: message.data.roleZh,
+                        menus: message.data.menus
+                    });
+                    this.$router.replace({path: '/home'});
+                })
+            },
+
             anonymousHandler: function() {
 
                 this.$store.commit('refreshUser', {

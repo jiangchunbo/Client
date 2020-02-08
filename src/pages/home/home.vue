@@ -2,29 +2,21 @@
     <el-container style="height: 100%;">
         <el-header height="50px">
             <router-link to="/home" class="logo">数据管理和汇集系统</router-link>
-            <nav class="navigation-bar">
-<!--                <a href="#" class="sidebar-toggle"><i class="el-icon-menu"></i></a>-->
-            </nav>
+            <nav class="navigation-bar"></nav>
         </el-header>
 
         <el-container>
             <el-aside width="230px" class="main-sidebar">
                 <div class="user-panel">
-                    <h3 class="welcome">{{this.$store.state.role}}, 欢迎</h3>
+                    <h3 class="welcome">{{$store.state.role}}, 欢迎</h3>
                     <h5><a class="logout" @click="logoutHandler">点击注销</a></h5>
                 </div>
                 <el-menu unique-opened router text-color="#b8c7ce"
                          active-text-color="#ffffff" class="sidebar-menu">
                     <el-menu-item v-for="(item, index) in this.$store.state.menus"
-                                  :index="item.index" :key="index">
-                        <span slot="title">{{item.label}}</span>
+                                  :index="item['menuIndex']" :key="index">
+                        <span slot="title">{{item['menuLabel']}}</span>
                     </el-menu-item>
-<!--                    <el-menu-item index="/home/senior">-->
-<!--                        <span slot="title">高级数据管理</span>-->
-<!--                    </el-menu-item>-->
-<!--                    <el-menu-item index="/home/assemble">-->
-<!--                        <span slot="title">数据汇集管理</span>-->
-<!--                    </el-menu-item>-->
                 </el-menu>
             </el-aside>
             <el-container>
@@ -50,42 +42,48 @@
     export default {
         data: function () {
             return {
-                form: {}
             };
         },
         computed: {},
         methods: {
-            login() {
-                ajax.post('/login', {
-                    username: this.form.username,
-                    password: this.form.password
-                }).then((message) => {
-                    this.$message.success("登录成功");
-                    this.loggedIn = true;
-                    this.loginFormVisible = false;
 
-                    this.menus = JSON.parse(message.request.response);
-                }).catch((error) => {
-                    this.$message.error(error.request.response);
-                }).finally();
+            /**
+             * 点击注销之后的回调函数
+             */
+            logoutHandler() {
+                let loading = this.$loading({text: '注销中...'});
+                this.logoutSubmit(loading);
             },
 
-            logoutHandler() {
+            logoutSubmit(loading) {
                 ajax.post('/logout', {}).then(() => {
-                    this.$message.success("注销成功");
-                    this.loggedIn = false;
+                    this.$message.success('注销成功');
                     this.$router.replace('/login');
                 }).catch((error) => {
                     this.$message.error(error.request.response);
-                }).finally();
+                }).finally(() => {
+                    loading.close();
+                });
+            }
+        },
+
+        /**
+         * 初始化注入&校验之后 (created) 的回调函数，进行状态注册，形成匿名用户
+         */
+
+        created: function() {
+            if(!this.$store.state.role) {
+                this.$store.commit('refreshUser', {
+                    role: '匿名用户',
+                    menus: [
+                        {
+                            'menuIndex': '/home/basic',
+                            'menuLabel': '基础数据管理'
+                        }
+                    ]
+                });
             }
         }
-
-        // beforeRouteEnter: (to, from, next) => {
-        //     if(this.$store.state.token !== 'login') {
-        //         this.$message.warning('权限不足, 请先登录');
-        //     }
-        // }
     }
 </script>
 
